@@ -80,10 +80,21 @@ class _QRViewState extends State<QRView> {
     );
   }
 
+  Future<void> stopCamera() async {
+    if (_channel != null) {
+      try {
+        await _channel!.invokeMethod('stopCamera');
+      } on PlatformException catch (e) {
+        throw CameraException(e.code, e.message);
+      }
+    }
+  }
+
   @override
   void dispose() {
-    super.dispose();
     WidgetsBinding.instance.removeObserver(_observer);
+    stopCamera();
+    super.dispose();
   }
 
   Future<void> updateDimensions() async {
